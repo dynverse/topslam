@@ -1,0 +1,12 @@
+#!/bin/bash
+install_dir="$1"
+if [ ! -d $install_dir ]; then
+  mkdir $install_dir
+  module load python
+  virtualenv -p python $install_dir --system-site-packages
+  cd $install_dir
+  source bin/activate
+  pip install numpy matplotlib seaborn pandas sklearn
+  git clone https://github.com/mzwiessele/topslam
+  mv topslam/topslam ../topslam
+fi

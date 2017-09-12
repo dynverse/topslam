@@ -1,0 +1,10 @@
+.onLoad <- function(libname, pkgname) {
+  if(!dir.exists(glue::glue("bash {find.package('topslam')}/venv"))) {
+    reinstall()
+  }
+}
+
+#' @export
+reinstall <- function() {
+  system(glue::glue("bash {find.package('topslam')}/make {find.package('topslam')}/venv"))
+}
