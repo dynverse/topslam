@@ -22,7 +22,7 @@ methods = {'t-SNE':TSNE(n_components=p["n_components"]),
            'Isomap': Isomap(n_components=p["n_components"], n_neighbors=p["n_neighbors"]),
            'ICA': FastICA(n_components=p["n_components"])
            }
-methods = {method_name:method for method_name, method in methods.items() if method_name in p["dimreds"]}
+methods = {method_name:method for method_name, method in methods.iteritems() if method_name in p["dimreds"]}
 
 print("Dimensionality reduction")
 
