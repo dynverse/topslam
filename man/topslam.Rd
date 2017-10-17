@@ -6,7 +6,7 @@
 \usage{
 topslam(counts, start_cell_id, n_components = 2, n_neighbors = 10,
   linear_dims = 0, max_iters = 200, dimreds = c("t-SNE", "PCA",
-  "Spectral", "Isomap", "ICA"))
+  "Spectral", "Isomap", "ICA"), num_cores = 1)
 }
 \arguments{
 \item{counts}{the counts}
@@ -22,6 +22,8 @@ topslam(counts, start_cell_id, n_components = 2, n_neighbors = 10,
 \item{max_iters}{the number of iterations to optimize over}
 
 \item{dimreds}{the dimensionality reductions to use}
+
+\item{num_cores}{the number of cores}
 }
 \description{
 Run topslam

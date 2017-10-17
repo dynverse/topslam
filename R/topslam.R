@@ -7,6 +7,7 @@
 #' @param linear_dims ?
 #' @param max_iters the number of iterations to optimize over
 #' @param dimreds the dimensionality reductions to use
+#' @param num_cores the number of cores
 #'
 #' @importFrom methods formalArgs
 #' @importFrom utils write.table read.csv
@@ -18,7 +19,8 @@ topslam <- function(counts,
                     n_neighbors = 10,
                     linear_dims = 0,
                     max_iters = 200,
-                    dimreds = c("t-SNE", "PCA", "Spectral", "Isomap", "ICA")) {
+                    dimreds = c("t-SNE", "PCA", "Spectral", "Isomap", "ICA"),
+                    num_cores = 1) {
   # python counts from 0, R from 1
   start_cell_id <- which(rownames(counts) %in% start_cell_id) - 1
 
@@ -36,16 +38,27 @@ topslam <- function(counts,
     params <- as.list(environment())[copy_args]
     write(jsonlite::toJSON(params, auto_unbox = TRUE), paste0(temp_folder, "/params.json"))
 
+    if (!is.null(num_cores)) {
+      num_cores_str <- glue::glue(
+        "export MKL_NUM_THREADS={num_cores};",
+        "export NUMEXPR_NUM_THREADS={num_cores};",
+        "export OMP_NUM_THREADS={num_cores};"
+      )
+    } else {
+      num_cores_str <- ""
+    }
+
     # execute topslam
     output <- system2(
       "/bin/bash",
       args = c(
         "-c",
         shQuote(glue::glue(
-          "cd {find.package('topslam')}/venv",
-          "source bin/activate",
-          "python {find.package('topslam')}/wrapper.py {temp_folder}",
-          .sep = ";"))
+          "cd {find.package('topslam')}/venv;",
+          "source bin/activate;",
+          "{num_cores_str}",
+          "python {find.package('topslam')}/wrapper.py {temp_folder};"
+        ))
       ), stdout = TRUE, stderr = TRUE
     )
 
