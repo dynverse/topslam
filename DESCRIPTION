@@ -10,4 +10,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Imports:
-  glue
+  glue,
+  jsonlite,
+  methods,
+  utils
