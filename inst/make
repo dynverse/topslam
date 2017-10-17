@@ -9,5 +9,5 @@ if [ ! -d $install_dir ]; then
   pip install numpy matplotlib seaborn pandas scikit-learn GPy pods
   git clone https://github.com/mzwiessele/topslam
   mv topslam/ topslam_git/
-  mv topslam_git/topslam/ .
+  mv topslam_git/topslam/ ..
 fi
