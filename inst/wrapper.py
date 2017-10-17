@@ -1,12 +1,13 @@
-import topslam
+# import topslam
 import os
 import sys
 import json
 import pandas as pd
+import topslam
 from topslam.optimization import run_methods, create_model, optimize_model
 from topslam import ManifoldCorrectionTree
 
-temp_folder = sys.argv[1]
+# temp_folder = sys.argv[1]
 
 # Load params
 p = json.load(open(temp_folder + "/params.json", "r"))
