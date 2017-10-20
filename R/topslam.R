@@ -54,9 +54,10 @@ topslam <- function(counts,
       args = c(
         "-c",
         shQuote(glue::glue(
-          "cd {find.package('topslam')}/venv;",
-          "source bin/activate;",
+          "cd {find.package('topslam')};",
+          "source venv/bin/activate;",
           "{num_cores_str}",
+          "{cd ..}",
           "python {find.package('topslam')}/wrapper.py {temp_folder};"
         ))
       ), stdout = TRUE, stderr = TRUE
