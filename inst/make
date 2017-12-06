@@ -2,7 +2,7 @@
 install_dir="$1"
 if [ ! -d $install_dir ]; then
   mkdir $install_dir
-  module load python2/x86_64/2.7.2
+  module load python2/x86_64/2.7.14
   virtualenv -p python2.7 $install_dir --system-site-packages
   cd $install_dir
   source bin/activate
