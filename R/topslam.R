@@ -24,7 +24,7 @@ topslam <- function(
   num_cores = 1
 ) {
   # python counts from 0, R from 1
-  start_cell_id <- which(rownames(counts) %in% start_cell_id) - 1
+  start_cell_id <- which(rownames(expression) %in% start_cell_id) - 1
 
   # create a temporary folder
   temp_folder <- tempfile()
@@ -35,7 +35,7 @@ topslam <- function(
     utils::write.table(as.data.frame(expression), paste0(temp_folder, "/expression.tsv"), sep="\t")
 
     # write params to json
-    copy_args <- setdiff(methods::formalArgs(topslam), c("counts"))
+    copy_args <- setdiff(methods::formalArgs(topslam), c("expression"))
     params <- as.list(environment())[copy_args]
     write(jsonlite::toJSON(params, auto_unbox = TRUE), paste0(temp_folder, "/params.json"))
 
