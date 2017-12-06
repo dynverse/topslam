@@ -12,17 +12,20 @@ temp_folder = sys.argv[1]
 # Load params
 p = json.load(open(temp_folder + "/params.json", "r"))
 
-Y = pd.read_table(temp_folder + "/counts.tsv", index_col=0)
+Y = pd.read_table(temp_folder + "/expression.tsv", index_col=0)
 
 from sklearn.manifold import TSNE, LocallyLinearEmbedding, SpectralEmbedding, Isomap
 from sklearn.decomposition import FastICA, PCA
 
-methods = {'t-SNE':TSNE(n_components=p["n_components"]),
-           'PCA':PCA(n_components=p["n_components"]),
-           'Spectral': SpectralEmbedding(n_components=p["n_components"], n_neighbors=p["n_neighbors"]),
-           'Isomap': Isomap(n_components=p["n_components"], n_neighbors=p["n_neighbors"]),
-           'ICA': FastICA(n_components=p["n_components"])
-           }
+n_components = p["n_components"]
+
+methods = {
+  't-SNE':TSNE(n_components=n_components),
+  'PCA':PCA(n_components=n_components),
+  'Spectral': SpectralEmbedding(n_components=n_components, n_neighbors=p["n_neighbors"]),
+  'Isomap': Isomap(n_components=n_components, n_neighbors=p["n_neighbors"]),
+  'ICA': FastICA(n_components=n_components)
+}
 methods = {method_name:method for method_name, method in methods.iteritems() if method_name in p["dimreds"]}
 
 print("Dimensionality reduction")
