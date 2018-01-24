@@ -12,6 +12,7 @@
 #' @importFrom methods formalArgs
 #' @importFrom utils write.table read.csv
 #' @importFrom jsonlite toJSON
+#' @importFrom dynutils run_until_exit
 #' @export
 topslam <- function(
   expression,
