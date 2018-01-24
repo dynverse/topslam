@@ -4,12 +4,12 @@
 \alias{topslam}
 \title{Run topslam}
 \usage{
-topslam(counts, start_cell_id, n_components = 2, n_neighbors = 10,
+topslam(expression, start_cell_id, n_components = 2, n_neighbors = 10,
   linear_dims = 0, max_iters = 200, dimreds = c("t-SNE", "PCA",
   "Spectral", "Isomap", "ICA"), num_cores = 1)
 }
 \arguments{
-\item{counts}{the counts}
+\item{expression}{the normalised expression data}
 
 \item{start_cell_id}{the names of starting cells}
 

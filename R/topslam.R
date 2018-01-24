@@ -1,6 +1,6 @@
 #' Run topslam
 #'
-#' @param expression the expression
+#' @param expression the normalised expression data
 #' @param start_cell_id the names of starting cells
 #' @param n_components the number of components
 #' @param n_neighbors the number of neighbors
@@ -13,14 +13,16 @@
 #' @importFrom utils write.table read.csv
 #' @importFrom jsonlite toJSON
 #' @export
-topslam <- function(expression,
-                    start_cell_id,
-                    n_components = 2,
-                    n_neighbors = 10,
-                    linear_dims = 0,
-                    max_iters = 200,
-                    dimreds = c("t-SNE", "PCA", "Spectral", "Isomap", "ICA"),
-                    num_cores = 1) {
+topslam <- function(
+  expression,
+  start_cell_id,
+  n_components = 2,
+  n_neighbors = 10,
+  linear_dims = 0,
+  max_iters = 200,
+  dimreds = c("t-SNE", "PCA", "Spectral", "Isomap", "ICA"),
+  num_cores = 1
+) {
   # python counts from 0, R from 1
   start_cell_id <- which(rownames(expression) %in% start_cell_id) - 1
 
@@ -30,8 +32,7 @@ topslam <- function(expression,
 
   tryCatch({
     # write expression data
-    expr <- as.data.frame(expression)
-    utils::write.table(expr, paste0(temp_folder, "/counts.tsv"), sep="\t")
+    utils::write.table(as.data.frame(expression), paste0(temp_folder, "/expression.tsv"), sep="\t")
 
     # write params to json
     copy_args <- setdiff(methods::formalArgs(topslam), c("expression"))
