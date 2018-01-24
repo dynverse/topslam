@@ -1,6 +1,6 @@
 #' Run topslam
 #'
-#' @param counts the counts
+#' @param expression the expression
 #' @param start_cell_id the names of starting cells
 #' @param n_components the number of components
 #' @param n_neighbors the number of neighbors
@@ -13,7 +13,7 @@
 #' @importFrom utils write.table read.csv
 #' @importFrom jsonlite toJSON
 #' @export
-topslam <- function(counts,
+topslam <- function(expression,
                     start_cell_id,
                     n_components = 2,
                     n_neighbors = 10,
@@ -22,7 +22,7 @@ topslam <- function(counts,
                     dimreds = c("t-SNE", "PCA", "Spectral", "Isomap", "ICA"),
                     num_cores = 1) {
   # python counts from 0, R from 1
-  start_cell_id <- which(rownames(counts) %in% start_cell_id) - 1
+  start_cell_id <- which(rownames(expression) %in% start_cell_id) - 1
 
   # create a temporary folder
   temp_folder <- tempfile()
@@ -30,11 +30,11 @@ topslam <- function(counts,
 
   tryCatch({
     # write expression data
-    expr <- as.data.frame(log2(counts+1))
+    expr <- as.data.frame(expression)
     utils::write.table(expr, paste0(temp_folder, "/counts.tsv"), sep="\t")
 
     # write params to json
-    copy_args <- setdiff(methods::formalArgs(topslam), c("counts"))
+    copy_args <- setdiff(methods::formalArgs(topslam), c("expression"))
     params <- as.list(environment())[copy_args]
     write(jsonlite::toJSON(params, auto_unbox = TRUE), paste0(temp_folder, "/params.json"))
 
@@ -42,26 +42,21 @@ topslam <- function(counts,
       num_cores_str <- glue::glue(
         "export MKL_NUM_THREADS={num_cores};",
         "export NUMEXPR_NUM_THREADS={num_cores};",
-        "export OMP_NUM_THREADS={num_cores};"
+        "export OMP_NUM_THREADS={num_cores}"
       )
     } else {
-      num_cores_str <- ""
+      num_cores_str <- "echo hi"
     }
 
-    # execute topslam
-    output <- system2(
-      "/bin/bash",
-      args = c(
-        "-c",
-        shQuote(glue::glue(
-          "cd {find.package('topslam')};",
-          "source venv/bin/activate;",
-          "{num_cores_str}",
-          "cd ..;",
-          "python {find.package('topslam')}/wrapper.py {temp_folder};"
-        ))
-      ), stdout = TRUE, stderr = TRUE
+    commands <- glue::glue(
+      "cd {find.package('topslam')}",
+      "source venv/bin/activate",
+      "{num_cores_str}",
+      "cd ..",
+      "python {find.package('topslam')}/wrapper.py {temp_folder}",
+      .sep = ";"
     )
+    output <- dynutils::run_until_exit(commands)
 
     # read output
     wad_grid <- utils::read.csv(paste0(temp_folder, "/wad_grid.csv"))
