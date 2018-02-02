@@ -1,4 +1,8 @@
-# import topslam
+# force matplotlib backend, to avoid tkinter problems (through GPy)
+import matplotlib
+matplotlib.use('PS')
+
+# import topslam and others
 import os
 import sys
 import json
