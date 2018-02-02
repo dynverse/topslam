@@ -52,7 +52,6 @@ topslam <- function(
 
     commands <- glue::glue(
       "cd {find.package('topslam')}",
-      "module load tk",
       "source venv/bin/activate",
       "{num_cores_str}",
       "cd ..",
