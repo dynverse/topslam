@@ -12,7 +12,6 @@
 #' @importFrom methods formalArgs
 #' @importFrom utils write.table read.csv
 #' @importFrom jsonlite toJSON
-#' @importFrom dynutils run_until_exit
 #' @export
 topslam <- function(
   expression,
@@ -58,7 +57,7 @@ topslam <- function(
       "python {find.package('topslam')}/wrapper.py {temp_folder}",
       .sep = ";"
     )
-    output <- dynutils::run_until_exit(commands)
+    output <- processx::run("/bin/bash", c("-c", commands), echo=TRUE)
 
     # read output
     wad_grid <- utils::read.csv(paste0(temp_folder, "/wad_grid.csv"))
